@@ -2,7 +2,10 @@ from flask import Flask
 from markupsafe import escape  # 为了返回安全
 from flask import url_for  # 自动生成路径
 from flask import render_template
+
+
 app = Flask(__name__)
+
 
 # 虚拟数据
 username = "brucechen"
