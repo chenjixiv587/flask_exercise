@@ -50,7 +50,7 @@ def forge():
 
     # 全局的两个变量 移动到这个函数内
     # 虚拟数据
-    username = "brucechen"
+    user = "brucechen"
     movies = [
         {'title': 'My Neighbor Totoro', 'year': '1988'},
         {'title': 'Dead Poets Society', 'year': '1989'},
@@ -64,7 +64,7 @@ def forge():
         {'title': 'The Pork of Music', 'year': '2012'},
     ]
 
-    user = User(name=username)
+    user = User(name=user)
     db.session.add(user)
     for m in movies:
         movie = Movie(title=m['title'], year=m['year'])
@@ -74,11 +74,21 @@ def forge():
     click.echo('Done.')
 
 
+@app.context_processor  # 上下文处理器
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 @app.route('/')
 def index():
-    user = User.query.first()
     movies = Movie.query.all()
-    return render_template("index.html", name=user, movies=movies)
+    return render_template("index.html", movies=movies)
 
 
 @app.route('/user/<name>')
